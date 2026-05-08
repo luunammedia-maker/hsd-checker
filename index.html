@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>HSD Checker</title>
 
   <style>
+
     *{
       margin:0;
       padding:0;
@@ -15,30 +17,30 @@
 
     body{
       background:#111827;
-      color:#F9FAFB;
       min-height:100vh;
       display:flex;
       justify-content:center;
       align-items:center;
       padding:20px;
+      color:white;
     }
 
     .container{
       width:100%;
-      max-width:420px;
+      max-width:430px;
       background:#1F2937;
-      border-radius:22px;
+      border-radius:24px;
       padding:24px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.35);
       border:1px solid #374151;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
     }
 
     .title{
       text-align:center;
-      font-size:28px;
+      font-size:30px;
       font-weight:bold;
-      margin-bottom:25px;
       color:#38BDF8;
+      margin-bottom:24px;
     }
 
     .input-group{
@@ -54,32 +56,41 @@
 
     input{
       width:100%;
-      padding:14px;
+      padding:16px;
       border:none;
       outline:none;
-      border-radius:14px;
+      border-radius:16px;
       background:#111827;
-      color:white;
-      font-size:16px;
       border:1px solid #374151;
+      color:white;
+      font-size:18px;
+      transition:0.2s;
+      letter-spacing:1px;
     }
 
     input:focus{
-      border:1px solid #38BDF8;
+      border-color:#38BDF8;
+      box-shadow:0 0 0 3px rgba(56,189,248,0.15);
+    }
+
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:#6B7280;
     }
 
     button{
       width:100%;
-      padding:15px;
+      padding:16px;
       border:none;
-      border-radius:14px;
+      border-radius:16px;
       background:#38BDF8;
       color:#111827;
+      font-size:17px;
       font-weight:bold;
-      font-size:16px;
       cursor:pointer;
-      transition:0.2s;
       margin-top:10px;
+      transition:0.2s;
     }
 
     button:hover{
@@ -87,22 +98,32 @@
     }
 
     .result{
-      margin-top:25px;
+      margin-top:24px;
       background:#111827;
-      border-radius:18px;
-      padding:18px;
+      border-radius:20px;
+      padding:20px;
       border:1px solid #374151;
     }
 
     .row{
       display:flex;
       justify-content:space-between;
-      margin-bottom:14px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .row:last-child{
+      margin-bottom:0;
+    }
+
+    .row-title{
+      color:#D1D5DB;
       font-size:15px;
     }
 
     .value{
       font-weight:bold;
+      font-size:16px;
     }
 
     .green{
@@ -117,8 +138,8 @@
       color:#EF4444;
     }
 
-    .progress-box{
-      margin-top:18px;
+    .progress-wrapper{
+      margin-top:20px;
     }
 
     .progress-title{
@@ -129,15 +150,15 @@
 
     .progress{
       width:100%;
-      height:18px;
+      height:20px;
       background:#374151;
       border-radius:999px;
       overflow:hidden;
     }
 
     .progress-bar{
-      height:100%;
       width:0%;
+      height:100%;
       border-radius:999px;
       transition:0.5s;
       background:#22C55E;
@@ -151,14 +172,21 @@
     }
 
     @media(max-width:480px){
+
       .container{
-        padding:18px;
+        padding:20px;
       }
 
       .title{
-        font-size:24px;
+        font-size:26px;
       }
+
+      input{
+        font-size:17px;
+      }
+
     }
+
   </style>
 </head>
 
@@ -171,13 +199,43 @@
     </div>
 
     <div class="input-group">
-      <label class="label">Ngày sản xuất</label>
-      <input type="date" id="mfg">
+
+      <label class="label">
+        Ngày sản xuất
+      </label>
+
+      <input
+        type="text"
+        id="mfg"
+        placeholder="24052025"
+        maxlength="10"
+        inputmode="numeric"
+      >
+
+      <div class="hint">
+        Nhập dạng: 24052025
+      </div>
+
     </div>
 
     <div class="input-group">
-      <label class="label">Hạn sử dụng</label>
-      <input type="date" id="exp">
+
+      <label class="label">
+        Hạn sử dụng
+      </label>
+
+      <input
+        type="text"
+        id="exp"
+        placeholder="30122026"
+        maxlength="10"
+        inputmode="numeric"
+      >
+
+      <div class="hint">
+        Nhập dạng: 30122026
+      </div>
+
     </div>
 
     <button onclick="calculate()">
@@ -187,52 +245,130 @@
     <div class="result">
 
       <div class="row">
-        <span>Tổng thời gian:</span>
-        <span class="value" id="totalDays">0 ngày</span>
+        <div class="row-title">
+          ⏳ Tổng thời gian
+        </div>
+
+        <div class="value" id="totalDays">
+          0 ngày
+        </div>
       </div>
 
       <div class="row">
-        <span>HSD còn lại:</span>
-        <span class="value" id="remainDays">0 ngày</span>
+        <div class="row-title">
+          ✅ HSD còn lại
+        </div>
+
+        <div class="value green" id="remainDays">
+          0 ngày
+        </div>
       </div>
 
       <div class="row">
-        <span>% HSD còn lại:</span>
-        <span class="value" id="percent">0%</span>
+        <div class="row-title">
+          📊 % còn lại
+        </div>
+
+        <div class="value" id="percent">
+          0%
+        </div>
       </div>
 
-      <div class="progress-box">
-        <div class="progress-title">Tiến trình HSD</div>
+      <div class="progress-wrapper">
+
+        <div class="progress-title">
+          Tiến trình HSD
+        </div>
 
         <div class="progress">
           <div class="progress-bar" id="progressBar"></div>
         </div>
+
       </div>
 
     </div>
 
     <div class="footer">
-      Dark Mode Dashboard
+      Dark Mode Mobile Optimized
     </div>
 
   </div>
 
   <script>
 
+    function formatInput(input){
+
+      input.addEventListener("input", function(){
+
+        let value = this.value.replace(/\D/g,'');
+
+        if(value.length > 8){
+          value = value.substring(0,8);
+        }
+
+        if(value.length >= 5){
+
+          value =
+            value.substring(0,2) + "/" +
+            value.substring(2,4) + "/" +
+            value.substring(4);
+
+        }
+        else if(value.length >=3){
+
+          value =
+            value.substring(0,2) + "/" +
+            value.substring(2);
+
+        }
+
+        this.value = value;
+
+      });
+
+    }
+
+    formatInput(document.getElementById("mfg"));
+    formatInput(document.getElementById("exp"));
+
+    function parseDate(value){
+
+      const clean = value.replace(/\D/g,'');
+
+      if(clean.length !== 8){
+        return null;
+      }
+
+      const day = clean.substring(0,2);
+      const month = clean.substring(2,4);
+      const year = clean.substring(4,8);
+
+      return new Date(`${year}-${month}-${day}`);
+
+    }
+
     function calculate(){
 
-      const mfg = new Date(document.getElementById("mfg").value);
-      const exp = new Date(document.getElementById("exp").value);
+      const mfg =
+        parseDate(document.getElementById("mfg").value);
+
+      const exp =
+        parseDate(document.getElementById("exp").value);
 
       if(!mfg || !exp || exp <= mfg){
+
         alert("Vui lòng nhập ngày hợp lệ");
+
         return;
       }
 
       const today = new Date();
 
-      const total = Math.ceil((exp - mfg) / (1000*60*60*24));
-      const remain = Math.ceil((exp - today) / (1000*60*60*24));
+      const total =
+        Math.ceil((exp - mfg) / (1000*60*60*24));
+
+      const remain =
+        Math.ceil((exp - today) / (1000*60*60*24));
 
       let percent = (remain / total) * 100;
 
@@ -249,18 +385,53 @@
       document.getElementById("percent").innerHTML =
         percent.toFixed(2) + "%";
 
-      const bar = document.getElementById("progressBar");
+      const progressBar =
+        document.getElementById("progressBar");
 
-      bar.style.width = percent + "%";
+      progressBar.style.width =
+        percent + "%";
+
+      const remainText =
+        document.getElementById("remainDays");
+
+      const percentText =
+        document.getElementById("percent");
 
       if(percent > 60){
-        bar.style.background = "#22C55E";
+
+        progressBar.style.background =
+          "#22C55E";
+
+        remainText.className =
+          "value green";
+
+        percentText.className =
+          "value green";
+
       }
       else if(percent > 30){
-        bar.style.background = "#F59E0B";
+
+        progressBar.style.background =
+          "#F59E0B";
+
+        remainText.className =
+          "value orange";
+
+        percentText.className =
+          "value orange";
+
       }
       else{
-        bar.style.background = "#EF4444";
+
+        progressBar.style.background =
+          "#EF4444";
+
+        remainText.className =
+          "value red";
+
+        percentText.className =
+          "value red";
+
       }
 
     }
